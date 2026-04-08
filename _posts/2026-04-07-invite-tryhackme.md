@@ -27,7 +27,7 @@ Khi mình đưa hash này lên virustotal thì mình nhận lại được kết
 
 #### What is the name of the file identified with the flagged SHA256 hash?
 
-Tên của nó đã được xác định ở trên và nó có tên là syshelpers.exe. Khi mình search nó ở trên [any.run](http://any.run) thì kết quả họ trả về cho mình 
+Tên của nó đã được xác định ở trên và nó có tên là syshelpers.exe. Khi mình search nó ở trên [any.run](https://any.run) thì kết quả họ trả về cho mình 
 
 ![image.png](./assets/invite/2.png)
 
