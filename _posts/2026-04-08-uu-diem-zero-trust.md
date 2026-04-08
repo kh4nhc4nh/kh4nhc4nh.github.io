@@ -285,7 +285,7 @@ khi file đã được đẩy từ production qua snapshot thì chúng ta sẽ t
 
 khi data được đẩy vào incoming thì chúng ta sẽ thực hiện snapshot theo như đúng quy trình của chúng ta
 
-theo cấu trúc như file như trên thì chúng ta sẽ thực hiện snapshot. Em sẽ chạy file [k.sh](http://k.sh) trong folder scripts của snapshot để thực hiện snapshot 
+theo cấu trúc như file như trên thì chúng ta sẽ thực hiện snapshot. Em sẽ chạy file **k.sh** trong folder scripts của snapshot để thực hiện snapshot 
 
 ![image.png](attachment:a1b84dc1-2cf6-4c4c-a42d-2f7308486187:image.png)
 
