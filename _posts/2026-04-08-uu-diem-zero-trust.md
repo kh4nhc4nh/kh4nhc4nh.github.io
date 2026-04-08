@@ -140,11 +140,11 @@ Vì có hệ thống có 5 tầng nên bạn cần chuẩn 5-6 máy ảo nếu l
 
 ## Production :
 
-![image.png](attachment:4bec43be-bd0b-454c-a5a3-4f23c0760277:image.png)
+![image.png](./assets/backups/q.png)
 
 Đây là những gì có trong file của production, phần data là dữ liệu được đưa vào, phần ouput thì khi phân loại dữ liệu xong nó sẽ gửi qua đó và chúng ta có thể nhận biết được data nào sẽ quan trọng dự vào policy mà chúng ta đã cấu hình
 
-![image.png](attachment:951809fd-2558-40f2-a19d-7c674bb38b4b:image.png)
+![image.png](./)
 
 thì trong file scripts có những cái mà chúng ta cần thiết, thì phần production mình sẽ để ở bên dưới để các bạn có thể thấy rõ hơn
 
