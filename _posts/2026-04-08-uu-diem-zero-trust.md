@@ -1,5 +1,5 @@
 ---
-title: "Hệ thống Backup 5 tầng" 
+title: "Hệ thống Backup 5 tầng"
 date: 2026-04-08 16:51:00 +0700
 categories: [Cybersecurity, Backup]
 tags: [siem, lab]
