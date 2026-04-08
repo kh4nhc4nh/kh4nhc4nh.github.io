@@ -120,25 +120,25 @@ vault write -f auth/approle/role/backup-role/secret-id // hai lenh  nay la lay c
 v// vault moi cap token duoc
 ```
 
-## #Mục tiêu bài lab
+## Mục tiêu bài lab
 
 Mục đích mình thực hiện bài lab này vì hiện tại mình đang có một dự án nghiên cứu khoa học và tên đề tài của nó là “Xây dựng phương pháp ngăn chặn ransomware bảo vệ dữ liệu y tế số. Bên cạnh đó mình muốn hiểu được hệ thống nó sẽ hoạt động như thế nào và nguy cơ về độ bảo mật khi nó xảy ra giảm thiểu sự cố là bao nhiêu. Hệ thống có thể sẽ có lỗi sau khi triển khai nhưng nó vẫn sẽ mang lại một điều gì đó hết sức cần thiết cho data hospital. Bên cạch đó khi chúng ta backup hay store data thì nó luôn verify credential liên tục cho chúng ta hạn chế và giảm thiểu tối đa vầ ddie
 
-## #Gốc nhìn tổng quan
+## Gốc nhìn tổng quan
 
 Hiện nay trên thế giới chúng ta đã và đang thấy có rất nhiều vụ ransomware và loss data xảy ra, gây nên thiệt hại rất lớn về chi phí cũng như con người. Bên cạnh đó chúng ta có thể thấy được đó không phải là do vấn đề vì con người mà vấn đề nằm ở bảo mật và vấn đề đó sẽ phải giải quyết ra sao nếu chúng ta không có một cái gì đó để khiến điều này xảy ra trong scope mà chúng ta có thể kiểm soát được và mất dữ liệu có thể chấp nhận được.
 
-## #Những điều cần chuẩn bị
+## Những điều cần chuẩn bị
 
 Vì có hệ thống có 5 tầng nên bạn cần chuẩn 5-6 máy ảo nếu là máy bạn đủ mạnh và đủ khỏe để làm những việc này, cón nếu không thì bạn có thể kết hợp tầng 1 + tầng 2 vào một máy ảo, và tầng 4 + tầng 5 vào một máy ảo còn tầng 3 giữ nguyên, recommend bạn nên setup wazuh cho mỗi máy ảo riêng, hiện tại mình đang cấu hình ip tĩnh cho vm nên mình sẽ sử dụng logwatch và chuyển tất cả các log về trung tâm làm việc, còn mình sử dụng 5 máy áo và sử dụng lần lượt khi data đã được backup và thể hiện flow data của nó chi tiết. Về phần vault, bạn có thể sử dụng tool Vault, nhưng khá khó chịu là khi setup lại server thì bạn phải làm lại từ đầu để nó cấp Role_id và Secrect_id, nhưng đây mới là cái khó khiến ransomware không thể tấn công vào được
 
-## #Về phần thực hành
+## Về phần thực hành
 
 **Note : dữ liệu này em hiện đang mô phỏng và em chưa lấy bất kì dữ liệu nào ngoài đời thực hay bất kỳ một dữ liệu sensitive data nào áp dụng cho hệ thống này** 
 
 Đầu tiên khi production được nhận dữ liệu từ agent thì nó sẽ vào file data và chưa có phân loại chỉ là một file tổng hợp lại tất cả các dữ liệu đã được lưu trữ. Giờ chúng ta bắt đầu thực hiện một cách chi tiết và cụ thể nhất
 
-## #Production :
+## Production :
 
 ![image.png](attachment:4bec43be-bd0b-454c-a5a3-4f23c0760277:image.png)
 
