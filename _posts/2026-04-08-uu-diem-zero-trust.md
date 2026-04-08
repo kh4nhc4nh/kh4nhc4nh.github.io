@@ -140,11 +140,11 @@ Vì có hệ thống có 5 tầng nên bạn cần chuẩn 5-6 máy ảo nếu l
 
 ## Production :
 
-![image.png](./assets/backups/q.png)
+![image.png](./assets/backups/1.png)
 
 Đây là những gì có trong file của production, phần data là dữ liệu được đưa vào, phần ouput thì khi phân loại dữ liệu xong nó sẽ gửi qua đó và chúng ta có thể nhận biết được data nào sẽ quan trọng dự vào policy mà chúng ta đã cấu hình
 
-![image.png](./)
+![image.png](./assets/backups/2.png)
 
 thì trong file scripts có những cái mà chúng ta cần thiết, thì phần production mình sẽ để ở bên dưới để các bạn có thể thấy rõ hơn
 
@@ -281,17 +281,17 @@ khi đã chạy xong hoàn tất thì file được zip sẽ chuyển qua cho st
 
 khi file đã được đẩy từ production qua snapshot thì chúng ta sẽ thực hiện snapshot
 
-![image.png](attachment:91e6d5fe-8119-44cd-b2ae-7901907c6845:image.png)
+![image.png](./assets/backups/3.png)
 
 khi data được đẩy vào incoming thì chúng ta sẽ thực hiện snapshot theo như đúng quy trình của chúng ta
 
 theo cấu trúc như file như trên thì chúng ta sẽ thực hiện snapshot. Em sẽ chạy file **k.sh** trong folder scripts của snapshot để thực hiện snapshot 
 
-![image.png](attachment:a1b84dc1-2cf6-4c4c-a42d-2f7308486187:image.png)
+![image.png](./assets/backups/4.png)
 
 khi thực hiện xong thì file trong incoming sẽ bị xóa và snapshot sẽ được ghi vào folder snapshot và log thì sẽ được ghi vào file snapshot.log chúng ta có thể kiểm tra nó ở phía trên em đang liệt kê. Còn file manifest sẽ lưu lại file nào được snapshot và id của file đó
 
-![image.png](attachment:05a441f0-b347-41a0-ad74-08ea5ddd2ff5:image.png)
+![image.png](./assets/backups/5.png)
 
 vậy là quá trình snapshot của chúng ta đã xong, dưới đây là những gì có trong quá trình này từ log cho đến snapshot
 
@@ -540,11 +540,11 @@ done
 
 Em sẽ thực hiện luồng dữ liệu của em
 
-![image.png](attachment:e0672c7a-07f9-409c-896a-8f32258c5c97:image.png)
+![image.png](./assets/backups/6.png)
 
 đây là file dữ liệu chưa có gì và sau khi em thực hiện backup 
 
-![image.png](attachment:0c78b0b0-a672-48df-9443-4c876b46d9f3:image.png)
+![image.png](./assets/backups/7.png)
 
 đây là tổng quan của hệ thống em khi thực hiện đẩy backup hoàn tất, staging yêu cầu phiên backup và orchestrator cấp token backup rồi đẩy file lên backup_storage, đây chỉ mới là luồng backup còn khá là cơ bản và thiếu chuyên nghiệp có thể một vài ngày tới em sẽ nâng cấp hệ thống của mình và thực hiện lại những điều này.
 
@@ -652,7 +652,7 @@ vault write -f auth/approle/role/backup-role/secret-id //xin vault cap lai secre
 
 đó là những lệnh chúng ta cần chạy khi kích hoạt vault và giờ em sẽ thực hiện backup 
 
-![image.png](attachment:59ffdc48-161d-4886-83f3-82af0bc3b42b:image.png)
+![image.png](./assets/backups/8.png)
 
 thì Orchestrator chính là thằng trung gian xin token từ vault và cấp về backup, khi backup xong thì bên vault sẽ cấp key cho chúng ta, key mà em vừa storage về vautl đó là key = app_snapshot_1773907850, key này em dùng để restore lại nếu data khi bị encryption hoặc bị tấn công.
 
