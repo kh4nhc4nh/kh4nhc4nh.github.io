@@ -3,29 +3,29 @@
 icon: fas fa-info-circle
 order: 4
 ---
-## 👋 Chào mừng bạn đến với Blog Hoang Gia Khanh
+## 👋 Welcome to Hoang Gia Khanh's Blog
 
-Tôi là một người đam mê **Cybersecurity** và **System Administration**. Blog này là nơi tôi lưu trữ và chia sẻ các bài Lab, quá trình nghiên cứu về hệ thống và bảo mật.
-Bên cạnh đó tôi còn là một chàng trai thiên về mảng SOC hay còn gọi là **Blue Team**, blog này thì tôi chỉ muốn chia sẻ những bài lab cũng như những gì mà tôi đã làm hay thực
-hiện cho các bạn xem, không chỉ chia sẻ những gì tôi đã làm mà còn thực hiện những điều để bảo vệ an toàn trên không gian mạng, có thể những bài lab của tôi chưa thật sự chỉnh chu
-nhưng các bạn có thể liên hệ với tôi qua email bên dưới để bạn và tôi cùng nhau phát triển trong nghành này.
+I am someone who is passionate about **Cybersecurity** and **System Administration**. This blog is where I store and share my labs, research, and experiences related to systems and security.
 
-### 🎯 Mục tiêu của tôi
-* Xây dựng hệ thống Backup với kiến trúc 5 lớp.
-* Nghiên cứu sâu về Zero Trust.
-* Chia sẻ kiến thức Lab cho cộng đồng.
-* Trở thành một chàng trai Blue Team.
-* Thực hiện những bài lab về Cybersecurity.
+In addition, I am more focused on the SOC field, also known as the **Blue Team**. Through this blog, I want to share the labs and projects that I have worked on and implemented for others to learn from. Not only do I share my work, but I also aim to contribute to protecting cybersecurity in the digital space.
 
-### 🛠 Kỹ năng & Công cụ
+Some of my labs may not be perfectly polished yet, but you are always welcome to contact me via the email below so that we can learn and grow together in this field.
+
+### 🎯 My Goals
+* Build a Backup system with a 5-layer architecture.
+* Conduct in-depth research on Zero Trust.
+* Share lab knowledge with the community.
+* Become a skilled Blue Team engineer.
+* Build and practice Cybersecurity labs.
+
+### 🛠 Skills & Tools
 * **Security:** Wazuh, Suricata.
 * **OS:** Linux (Ubuntu, Debian), Windows Server.
 * **Programming:** C, Shell Script.
-* **Malware:** Analyze malware static.
+* **Malware:** Static malware analysis.
 * **Network:** Snort, Iptables, Wireshark.
 
 > "Security is not a product, but a process."
 {: .prompt-info }
 
-Bạn có thể liên hệ với tôi qua [Email](mailto:hoanggiakhanh.2310@gmail.com) hoặc GitHub.
-
+You can contact me via [Email](mailto:hoanggiakhanh.2310@gmail.com) or GitHub.
