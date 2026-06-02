@@ -22,16 +22,16 @@ You have been provided with forensic artifacts collected via KAPE SANS Triage fr
 
 Ở đây attacker đã sử dụng Group Policy Object để thực hiện thực thi file malicious, họ muốn mình đưa ra được bằng chứng là tên của GPO mà chịu trách nhiệm cho việc này, thì dành cho những ai chưa biết GPO trong AD là cơ chế ép toàn bộ máy tính và người dùng trong domain phải tuân theo một bộ cấu hình tập trung, nói cách khác nó là một tập hợp các cấu hình được lưu trong AD.
 
-!image.png
+![image.png](./assets/meteorhit/1.png)
 
 Trước hết mình sẽ kiểm tra cấu hình của nó và mình sẽ kiểm tra hive, thì tại sao mình lại phải kiểm tra hive bởi vì bản chất các cấu hình về hệ thống của nó sẽ được lưu ở trên hive của nó bởi vì ở đây sẽ lâu cấu hình state sẽ được lưu trên hive và mình sẽ sử dụng Register Explorer để check nó. Ở đây có rất nhiều hive nhưng mình sẽ kiểm tra hive SOFTWARE tại vì đây chính là nơi lâu cấu hình hình của nó, trong hive có rất nhiều register và một nó sẽ có mỗi role khác nhau trong đó nên là mình sẽ kiểm tra file register này.
 
-!image.png
+![image.png](./assets/meteorhit/2.png)
 
 Đây chính là những gì mình nhận được sau khi mình dump nó ra và mình sẽ vào path này để check 
 `Microsoft\Windows\CurrentVersion\Group Policy\Scripts\Startup\0`
 
-!image.png
+![image.png](./assets/meteorhit/3.png)
 
 Đây chính là những gì mà mình nhận được và kết quả đó là DeploySetup. Như các bạn đã nhìn trên path của nó có phần Group Policy và mình còn kiểm chứng thấy được rằng họ đã dùng script để thực hiện file malicious này trên đó.
 
@@ -39,19 +39,19 @@ Trước hết mình sẽ kiểm tra cấu hình của nó và mình sẽ kiểm
 
 Ở câu hỏi trên mình đã xác định họ đã run script để attack system vậy nên ở phần này thì mình sẽ xác định xem tên file script mà họ đã chạy là gì và full path của nó là như thế nào. Dựa vào câu hỏi trên thì mình sẽ kiểm tra trong eventview của victim có chứa logs của powershell hay là cmd gì hay không.
 
-!image.png
+![image.png](./assets/meteorhit/4.png)
 
 Thì mình có phát hiện được là ở đây có một file event mang tên là powershell, mình sẽ kiểm tra logs và phân tích logs ở trong đó và hacker đã làm những điều gì.
 
-!image.png
+![image.png](./assets/meteorhit/5.png)
 
 Thì ở đây mình đây mình đã xác định được file nào đã được họ run và các bạn có thể quan sát ở phía trên đó là file setup.bat và ngoài ra mình còn phát hiện được họ còn có sysmon thì mình sẽ check xem trong file này nó sẽ rõ hơn bởi vì sysmon là nơi tổng hợp các loại logs trong đó mà system input được. Khi mình kiểm tra trong file logs sysmon thì mình có phát hiện được khoảng thời gian đầu tiên mà hacker đã run file setup.bat đó.
 
-!image.png
+![image.png](./assets/meteorhit/6.png)
 
 Vào lúc 4:04:+ ngày 24/09/2024 hacker đã dùng cmd để run file setup.bat đó ngoài ra khi run file setup.bat đó xong thì đây là children của file setup.bat đó.
 
-!image.png
+![image.png](./assets/meteorhit/7.png)
 
 Vào lúc 4:04:+ PM cùng ngày thì sau khi run file setup.bat đó xong một process có tên là schtasks đã thực hiện một instruction như sau :
 
@@ -106,11 +106,11 @@ powershell  -Command "Add-MpPreference -Force -ExclusionPath '"C:\ProgramData\Mi
 
 Ở câu hỏi này họ muốn mình tìm ra PID mà có trách nhiệm cho việc hoạt động trái quy định này và file này được WMIC khởi tạo cũng như dùng chính cái này để run, bản chất của WMIC là một process trong microsoft nó cho phép các admin quản  lý cũng như là truy vấn thông tin về Windows System bla bla, malware đã tận dụng điều này để thực hiện hành vi trái phép và mình sẽ tìm ra nó ở dưới đây. Bên cạnh đó dựa vào những gì đã có sẵn thì  mình xác định được PID của nó là 
 
-!image.png
+![image.png](./assets/meteorhit/8.png)
 
 Như các bạn có thể thấy nó liên quan tới workgroup và ngoài ra nó còn liên quan tới configuring PC vậy nên mình xác định được PID mà mình đang cần tìm đó là 7492. Ngoài ra mình còn phát hiện được red flag tiếp thoe và hành động đáng nghi ngờ của họ 
 
-!image.png
+![image.png](./assets/meteorhit/9.png)
 
 Đây chính là behavior nói lên rằng họ tạo scheduled task để persistence và maintain điều khiển hệ thống qua compromise, task mà họ đã tạo để scheduled là Aa153!EGzN, đây là task mà khi máy tính hoạt động thì nó sẽ run và cứ luân phiên nhau như vậy khiến cho việc mà phát hiện rất là khó.
 
