@@ -70,17 +70,13 @@ Họ thực hiện run process reg.exe, đây chính là process thực hiện v
 
 VBAWarnings quyết định Excel xử lý VBA macro như thế nào, như các bạn có thể quan sát  thấy được rằng giá trị cươi cùng là 2 thì điều này có nghĩa tắt run macro nhưng sẽ hiện thông báo để user biết và bấm enable content, điều này khá là khó hiểu nhưng mình sẽ để giá trị của dưới đây để các bạn dễ hiểu hơn :
 
-| `1` | Cho phép toàn bộ macro chạy, không cảnh báo |
-| --- | --- |
+| `1` | Cho phép toàn bộ macro chạy, không cảnh báo 
 
-| `2` | Tắt macro mặc định nhưng hiện cảnh báo để người dùng bấm **Enable Content** |
-| --- | --- |
+| `2` | Tắt macro mặc định nhưng hiện cảnh báo để người dùng bấm **Enable Content** 
 
-| `3` | Chỉ cho macro có chữ ký số đáng tin chạy |
-| --- | --- |
+| `3` | Chỉ cho macro có chữ ký số đáng tin chạy 
 
-| `4` | Tắt toàn bộ macro, không cảnh báo |
-| --- | --- |
+| `4` | Tắt toàn bộ macro, không cảnh báo 
 
 thì ở đây giá trị của nó là 2 thì đây là giá trị default của Excel nhưng nếu user nhấn enable được thông báo thì payload sẽ được thực thi. Còn về phần HKCU\Software\Microsoft\Office\16.0\Excel\Security\Trusted Documents thì sau khi user nhấn enable thì tài liệu sẽ được chuyển vào folder Trusted Documents và payload sẽ được thực thi một cách thoải mái mà không lo bị prevent hay detect.
 
