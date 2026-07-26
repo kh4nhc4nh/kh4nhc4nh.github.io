@@ -77,7 +77,7 @@ WHERE "1=1
 EXEC xp_cmdshell('cat ../../../etc/passwd')
 #
 ```
-Hơn nữa attacker đã thực hiện thành công nhưng chưa thế xác định được là injection thành công hay không mặc dù server đã trả về đúng những gì cần phải làm, ngoài ra chưa thể xác định được đã connect với database success hay chưa, dưới đây chính là bằng chứng cho thấy không thể connect tới được server database.
+Hơn nữa attacker đã thực hiện thành công với bằng chứng đầy đủ và data đã được leak ra bên ngoài, mặc dù server đã trả về đúng những gì cần phải làm, ngoài ra chưa thể xác định được đã connect với database success hay chưa, dưới đây chính là bằng chứng cho thấy không thể connect tới được server database.
 ![image.png](./assets/2026-07-26-network-analysts/10.png)
 
 Server đã tiết lộ cho attacker một thông tin quan trọng `root:bobthe@localhost`, đây có khả năng là fomart **user:password@domai**, chỉ là khả năng trong phỏng đoán thôi, nhưng đây cũng là một loại lỗ hổng **Information Disclosure** hay cụ thể hơn là rò rỉ cấu hình thông tin xác thực database.
