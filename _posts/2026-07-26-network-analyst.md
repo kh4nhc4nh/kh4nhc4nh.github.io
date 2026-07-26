@@ -1,8 +1,8 @@
 ---
-title: "Hành động nguy hiểm trên wireshark"
+title: "từ Local cho tới Reverse Shell"
 date: 2026-07-26 07:00:00 +0700
 categories: [Web, Reverse Shell]
-tags: [Malware, wireshark]
+tags: [Report, wireshark]
 ---
 ## Scenario
 
@@ -151,7 +151,7 @@ Dựa vào dữ liệu capture và phân tích trên, flow attack của hacker �
 
 `10.251.96.4 (compromised host)` → `Nmap SYN scan` → `10.251.96.5 (web server)` → `Gobuster directory discovery` → `SQL Injection attempt` → `Upload webshell (dbfuctions.php)` → `Reverse shell connect back to 10.251.96.4:4422` → `Post-exploitation activities`
 
-Phần flow attack này giúp làm rõ trình tự hacker khai thác và những mốc quan trọng trong cuộc tấn công. Cần khuyến nghị khoá chặt các cổng không cần thiết, kiểm tra kỹ ứng dụng web và xử lý các lỗ hổng upload + SQLi. Đặc biệt hơn nữa là phải cần thận trong việc configuring của server, có thể open port hoặc những service cần thiết, nhưng về phần cấu hình phải cẩn thận hơn trong phần security, kèm theo đó về phần file upload thì hãy có scope của các định dạng cố định không phải file nào cũng có thể upload được được. 
+Phần flow attack này giúp làm rõ trình tự hacker khai thác và những mốc quan trọng trong cuộc tấn công. Cần khuyến nghị khoá chặt các cổng không cần thiết, kiểm tra kỹ ứng dụng web và xử lý các lỗ hổng upload + SQLi. Đặc biệt hơn nữa là phải cần thận trong việc configuring của server, có thể open port hoặc những service cần thiết, nhưng về phần cấu hình phải cẩn thận hơn trong phần security, kèm theo đó về phần file upload thì hãy có scope của các định dạng cố định không phải file nào cũng có thể upload được được. Có thể không sát sao về việc security của web-server hay bất cứ service nào, nhưng khi điều gì hay lỗ hổng nào xuất hiện risk nào xảy ra thì hậu quả không thể lường trước được. 
 
 
 
