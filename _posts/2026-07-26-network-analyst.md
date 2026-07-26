@@ -151,6 +151,16 @@ Dựa vào dữ liệu capture và phân tích trên, flow attack của hacker �
 
 `10.251.96.4 (compromised host)` → `Nmap SYN scan` → `10.251.96.5 (web server)` → `Gobuster directory discovery` → `SQL Injection attempt` → `Upload webshell (dbfuctions.php)` → `Reverse shell connect back to 10.251.96.4:4422` → `Post-exploitation activities`
 
+## MITRE ATT&CK mapping
+
+- **T1046 - Network Service Scanning**: Nmap SYN scan từ `10.251.96.4` tới `10.251.96.5` để phát hiện cổng mở.
+- **T1595 - Active Scanning**: Dùng Gobuster quét thư mục và tài nguyên web server để tìm `login.php`, `upload.php` và các trang khác.
+- **T1190 - Exploit Public-Facing Application**: Thực hiện SQL Injection vào ứng dụng web và khai thác tham số đầu vào.
+- **T1505.003 - Web Shell**: Upload file `dbfuctions.php` lên server và sử dụng nó như một webshell.
+- **T1059 - Command and Scripting Interpreter**: Thực thi payload Python reverse shell để mở `/bin/sh -i` qua kết nối ngược.
+- **T1213 - Data from Information Repositories**: Leak thông tin cấu hình/credential `root:bobthe@localhost` từ phản hồi máy chủ.
+- **T1068 - Exploitation for Privilege Escalation**: Cố gắng nâng quyền root từ shell `www-data` nhưng không thành công.
+
 Phần flow attack này giúp làm rõ trình tự hacker khai thác và những mốc quan trọng trong cuộc tấn công. Cần khuyến nghị khoá chặt các cổng không cần thiết, kiểm tra kỹ ứng dụng web và xử lý các lỗ hổng upload + SQLi. Đặc biệt hơn nữa là phải cần thận trong việc configuring của server, có thể open port hoặc những service cần thiết, nhưng về phần cấu hình phải cẩn thận hơn trong phần security, kèm theo đó về phần file upload thì hãy có scope của các định dạng cố định không phải file nào cũng có thể upload được được. Có thể không sát sao về việc security của web-server hay bất cứ service nào, nhưng khi điều gì hay lỗ hổng nào xuất hiện risk nào xảy ra thì hậu quả không thể lường trước được. 
 
 
