@@ -1,8 +1,8 @@
 ---
-title: "Mail Phishing"
+title: "Mail Phishing chưa thể pass SPF và DMARC"
 date: 2026-07-27 07:00:00 +0700
 categories: [Phishing, Reverse Shell]
-tags: [Report, wireshark]
+tags: [Report, Mail Phishing]
 ---
 
 ## Scenario
@@ -49,9 +49,41 @@ Hơn nữa khi flow hoạt động trên cho thấy được mail đã đi qua n
 ![image](./assets/phishing1/5.png)
 ![image](./assets/phishing1/6.png)
 
-Từ hai hình trên có thể rút ra kết luận ngắn gọn rằng email này có dấu hiệu không vượt qua các kiểm tra xác thực bảo mật phổ biến. Hình 5 cho thấy SPF có thể bị fail, nghĩa là địa chỉ IP hoặc server gửi mail không nằm trong danh sách được phép của miền gửi. Hình 6 cho thấy DMARC ở trạng thái không rõ/unknown, cho thấy mail chưa được xác thực đầy đủ theo chính sách SPF/DKIM. Đây là một tín hiệu quan trọng trong phân tích phishing, vì các email lừa đảo thường cố tình bypass hoặc không tuân thủ các cơ chế xác thực này.
+Từ hai hình trên có thể rút ra kết luận rằng email này có dấu hiệu không vượt qua các kiểm tra xác thực bảo mật phổ biến. Hình 5 cho thấy SPF có thể bị fail, nghĩa là địa chỉ IP hoặc server gửi mail không nằm trong danh sách được phép của miền gửi. Hình 6 cho thấy DMARC ở trạng thái không rõ/unknown, cho thấy mail chưa được xác thực đầy đủ theo chính sách SPF/DKIM. Đây là một tín hiệu rất quan trọng trong phân tích phishing, vì các email lừa đảo thường cố tình bypass hoặc không tuân thủ các cơ chế xác thực này.
+
+### Đánh giá nhanh
+Đây là một trường hợp phishing điển hình với các dấu hiệu nhận diện rõ ràng: lời chào chung chung, yêu cầu chuyển tiền bất thường, attachment lạ và việc kiểm tra xác thực email không đạt. Mặc dù mail đã đến được hộp thư người nhận, các chỉ số SPF/DMARC cho thấy người gửi không được xác thực đầy đủ, nên đây là tín hiệu rất đáng ngờ. Nếu được phát hiện sớm, email này có thể được chặn trước khi ảnh hưởng đến người dùng hoặc hệ thống nội bộ.
+
+### Gợi ý cho doanh nghiệp về việc ngăn chặn mail phishing từ domain này
+Dựa trên phân tích trên, doanh nghiệp nên triển khai các biện pháp sau để giảm thiểu rủi ro từ các email phishing tương tự:
+
+1. Chặn và giám sát domain nghi ngờ
+   - Đưa tên miền như `mutawamarine.com` và các biến thể lặp lại, spoofing hoặc typo-squatting vào danh sách chặn trên gateway email.
+   - Tạo rule chặn các mail gửi từ domain không thuộc hệ thống đáng tin cậy hoặc không vượt qua SPF/DKIM/DMARC.
+
+2. Bật và kiểm tra xác thực email chuẩn
+   - Cấu hình SPF, DKIM và DMARC cho toàn bộ domain doanh nghiệp.
+   - Nếu có thể, thiết lập DMARC ở mức `quarantine` hoặc `reject` để ngăn mail giả mạo đi vào hộp thư người dùng.
+
+3. Kiểm soát attachment và URL
+   - Chặn các file có định dạng đáng ngờ như `.cab`, `.rar`, `.zip`, `.iso`, `.exe` hoặc các attachment bất thường từ người gửi chưa quen.
+   - Áp dụng sandbox và URL scanning cho mọi attachment và link trước khi cho người dùng mở.
+
+4. Tăng cường cảnh báo và đào tạo người dùng
+   - Bật tính năng báo cáo phishing trong Outlook/Google Workspace để người dùng có thể phản hồi nhanh khi nhận thấy mail đáng ngờ.
+   - Tổ chức đào tạo thường xuyên về các mẫu email lừa đảo, đặc biệt là các mail yêu cầu chuyển tiền, kèm attachment hoặc chứa lời kêu gọi khẩn cấp.
+
+5. Bảo vệ tài khoản và endpoint
+   - Bật MFA cho tài khoản email và các hệ thống quan trọng.
+   - Giới hạn việc chạy macro trong Office, chặn PowerShell hoặc script từ email đối với các người dùng không cần thiết.
+
+6. Theo dõi IOC và phản ứng sự cố
+   - Ghi nhận các dấu hiệu như IP `192.119.71.157`, hash malware và các domain sender liên quan để đưa vào phòng ngừa và điều tra.
+   - Khi phát hiện incident, cần block ở tầng email, proxy và endpoint để tránh lây lan.
 
 ### Attachment
 Khi đưa hash của nó lên Virustotal thì nhận được kết quả như dưới đây.
 ![image](./assets/phishing1/7.png)
-đây là một file malware trojan, tiếp tục thực hiện phân tích về malware này thì cần dùng hash của nó lên malwarebazzar và download malware về để thực hiện phân tích vì đây là file 
+đây là một file malware trojan, tiếp tục thực hiện phân tích về malware này thì cần dùng hash của nó lên malwarebazzar và download malware về để thực hiện phân tích vì đây là file, có một chút vấn đề về file malware này, mặc dù mình đã truy cập mọi thứ liên quan tới malware này nhưng không có thông số về malware này, chỉ có virustotal detected được và ngoài ra mình còn sử dụng **any.run** để tìm kiếm và dưới đây chính là những gì thuộc về nó còn sót lại ở đây.
+![image](./assets/phishing1/8.png)
+đó là những gì mà mình đã phân tích và detected được, bên cạnh đó dựa vào hình ảnh trên có thể quan sát được rằng run chỉ mở nó lên thì không có hành vi gì bất thường vì đây chỉ là file RAR nên là chưa run malware và hành động của malware nằm bên trong chưa thể phát hiện được. Khi nào unzip file rar đó và run click được vào file nằm bên trong đó thì sẽ thực hiện detect được và ngoài ra có thể thực hiện phân tích static với file đó để xác định một vài behavior của nó như thế nào, từ đó đưa ra kết luận sát xao và cứng nhắc hơn về phần này.
