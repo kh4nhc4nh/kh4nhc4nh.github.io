@@ -47,6 +47,7 @@ Theo flow hoạt động trên thì có thể xác định được IP của hac
 ![image](./assets/phishing1/4.png)
 Hơn nữa khi flow hoạt động trên cho thấy được mail đã đi qua nhiều hop chứ không phải riêng một server, bên cạnh đó có thể xác định thông qua **hình ảnh 3** cho thấy được rằng *SPF* của sender bị fail còn *DMARC* thì xuất hiện *UNKNOW* dưới đây chính là phần giải thích về điều này.
 ![image](./assets/phishing1/5.png)
+
 ![image](./assets/phishing1/6.png)
 
 Từ hai hình trên có thể rút ra kết luận rằng email này có dấu hiệu không vượt qua các kiểm tra xác thực bảo mật phổ biến. Hình 5 cho thấy SPF có thể bị fail, nghĩa là địa chỉ IP hoặc server gửi mail không nằm trong danh sách được phép của miền gửi. Hình 6 cho thấy DMARC ở trạng thái không rõ/unknown, cho thấy mail chưa được xác thực đầy đủ theo chính sách SPF/DKIM. Đây là một tín hiệu rất quan trọng trong phân tích phishing, vì các email lừa đảo thường cố tình bypass hoặc không tuân thủ các cơ chế xác thực này.
