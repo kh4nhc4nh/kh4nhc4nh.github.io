@@ -42,7 +42,7 @@ Dấu hiệu như sau và cũng giải thích cho mọi người dễ hiểu hơ
 10.251.96.5 -> 10.251.96.4 SYN, ACK port = 80**
 ```
 
-Đó chính là những flag thiệt lập kết nối trên **Network** và nếu nó được open thì sẽ reply thành 2 flag điển hình của thiết lập connect đó chính là **SYN** và **ACK,** đây cũng chính là ROOT Cause cho cuộc attack này mà mình đã detect được. Attacker đã scan từ port 1-1024 để phát hiện xem có những cổng port nào được open và thật may mắn ch
+Đó chính là những flag thiệt lập kết nối trên **Network** và nếu nó được open thì sẽ reply thành 2 flag điển hình của thiết lập connect đó chính là **SYN** và **ACK,** đây cũng chính là ROOT Cause cho cuộc attack này mà mình đã detect được. Attacker đã scan từ port 1-1024 để phát hiện xem có những cổng port nào được open và thật may mắn cổng port 80 được open.
 
 ### Phân Tích Diễn Biến
 
